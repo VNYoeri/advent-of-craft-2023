@@ -1,5 +1,11 @@
 package people;
 
 public enum PetType {
-    CAT, DOG, HAMSTER, TURTLE, BIRD, SNAKE
+    BIRD,
+    CAT,
+    DOG,
+    HAMSTER,
+    SNAKE,
+    TURTLE
+
 }
