@@ -17,12 +17,12 @@ public class Project {
         return testStatus != TestStatus.NO_TESTS;
     }
 
-    public String runTests() {
-        return testStatus == TestStatus.PASSING_TESTS ? "success" : "failure";
+    public IntermediateStatus runTests() {
+        return testStatus == TestStatus.PASSING_TESTS ? IntermediateStatus.SUCCESS : IntermediateStatus.FAILURE;
     }
 
-    public String deploy() {
-        return buildsSuccessfully ? "success" : "failure";
+    public IntermediateStatus deploy() {
+        return buildsSuccessfully ? IntermediateStatus.SUCCESS : IntermediateStatus.FAILURE;
     }
 
     public static class ProjectBuilder {
