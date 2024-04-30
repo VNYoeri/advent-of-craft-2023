@@ -12,8 +12,8 @@ public record Article(String name,
         this(name, content, new ArrayList<>());
     }
 
-    public void addComment(String text, String author) throws CommentAlreadyExistException {
-        addComment(text, author, LocalDate.now());
+    public void addComment(Comment comment) throws CommentAlreadyExistException {
+        addComment(comment.text(), comment.author(), comment.creationDate());
     }
 
     private void addComment(String text, String author, LocalDate creationDate) throws CommentAlreadyExistException {
