@@ -6,6 +6,7 @@ import people.PetType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.lang.System.lineSeparator;
@@ -43,7 +44,7 @@ class PopulationTests {
         final var response = formatPopulation();
 
         assertThat(response)
-                .hasToString("Peter Griffin who owns : Tabby " + lineSeparator() +
+                .isEqualTo("Peter Griffin who owns : Tabby " + lineSeparator() +
                         "Stewie Griffin who owns : Dolly Brian " + lineSeparator() +
                         "Joe Swanson who owns : Spike " + lineSeparator() +
                         "Lois Griffin who owns : Serpy " + lineSeparator() +
@@ -53,35 +54,18 @@ class PopulationTests {
                         "Glenn Quagmire");
     }
 
-    private static StringBuilder formatPopulation() {
-        final var response = new StringBuilder();
-
-        for (var person : population) {
-            response.append(format("%s %s", person.firstName(), person.lastName()));
-
-            if (!person.pets().isEmpty()) {
-                response.append(" who owns : ");
-            }
-
-            for (var pet : person.pets()) {
-                response.append(pet.name()).append(" ");
-            }
-
-            if (!population.getLast().equals(person)) {
-                response.append(lineSeparator());
-            }
-        }
-        return response;
+    private static String formatPopulation() {
+        return population.stream()
+                .map(Person::format)
+                .collect(Collectors.joining(" " + lineSeparator()));
     }
 
     @Test
     void whoOwnsTheYoungestPet() {
         var filtered = population.stream()
-                .min(comparingInt(PopulationTests::youngestPetAgeOfThePerson))
-                .orElse(null);
+                .min(comparingInt(PopulationTests::youngestPetAgeOfThePerson));
 
-        assert filtered != null;
-        assertThat(filtered.firstName()).isEqualTo("Lois");
+        assertThat(filtered.map(Person::firstName)).hasValue("Lois");
     }
 
     private static int youngestPetAgeOfThePerson(Person person) {
