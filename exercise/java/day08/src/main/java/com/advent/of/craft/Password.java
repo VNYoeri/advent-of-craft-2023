@@ -1,5 +1,11 @@
 package com.advent.of.craft;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.function.Predicate.not;
+
 public record Password(String input) {
     public boolean hasLengthOfEightOrMore() {
         return this.input.length() >= 8;
@@ -17,14 +23,43 @@ public record Password(String input) {
         return this.input.chars().anyMatch(Character::isDigit);
     }
 
-    public boolean containsAtLeastOneApprovedSpecialCharacter() {
-        char[] allowedSpecials = { '.', '*', '#', '@', '$', '%', '&' };
+    public boolean containsAllowedSpecialCharacter() {
+        return this.input.chars().mapToObj(x -> (char) x)
+                .anyMatch(this::isAllowed);
+    }
 
-        for (char allowedSpecial : allowedSpecials) {
-            if (this.input.contains(String.valueOf(allowedSpecial))) {
-                return true;
-            }
+    public boolean containsNoUnsupportedCharacter() {
+        return this.input.chars()
+                .mapToObj(c -> (char) c)
+                .filter(c -> !isAllowed(c))
+                .filter(c -> !Character.isLetterOrDigit(c))
+                .findFirst()
+                .isEmpty();
+    }
+
+    private boolean isAllowed(Character character) {
+        return Stream.of(ALLOWED.values())
+                .map(ALLOWED::character)
+                .anyMatch(allowed -> allowed.equals(character));
+    }
+
+    enum ALLOWED {
+        DOT('.'),
+        ASTERISK('*'),
+        HASHTAG('#'),
+        AT('@'),
+        DOLLAR('$'),
+        PERCENT('%'),
+        AMPERSAND('&');
+
+        private final Character character;
+
+        ALLOWED(Character character) {
+            this.character = character;
         }
-        return false;
+
+        Character character() {
+            return this.character;
+        }
     }
 }

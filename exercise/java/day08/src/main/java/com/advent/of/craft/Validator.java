@@ -6,6 +6,6 @@ public record Validator(Password password) {
                 && this.password.containsAtLeastOneUppercaseCharacter()
                 && this.password.containsAtLeastOneLowercaseCharacter()
                 && this.password.containsAtLeastOneDigit()
-                && this.password.containsAtLeastOneApprovedSpecialCharacter();
+                && this.password.containsAllowedSpecialCharacter();
     }
 }

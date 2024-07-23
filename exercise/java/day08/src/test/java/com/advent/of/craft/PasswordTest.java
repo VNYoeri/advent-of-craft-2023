@@ -79,19 +79,33 @@ class PasswordTest {
         @ValueSource(strings = { ".*#@$%&", "blub#", "&sdf$" })
         void passwordHasAtLeastAnAllowedSpecialCharacter(String input) {
             var password = new Password(input);
-            assertThat(password.containsAtLeastOneApprovedSpecialCharacter()).isTrue();
+            assertThat(password.containsAllowedSpecialCharacter()).isTrue();
         }
 
         @Test
         void passwordWithoutASpecialCharacter() {
             var password = new Password("FGHJKLfsdaf");
-            assertThat(password.containsAtLeastOneApprovedSpecialCharacter()).isFalse();
+            assertThat(password.containsAllowedSpecialCharacter()).isFalse();
         }
 
         @Test
         void passwordWithASpecialCharacterThatIsNotAllowed() {
             var password = new Password("~");
-            assertThat(password.containsAtLeastOneApprovedSpecialCharacter()).isFalse();
+            assertThat(password.containsAllowedSpecialCharacter()).isFalse();
+        }
+    }
+
+    @Nested
+    class InvalidCharacterCheck {
+        @Test
+        void  passwordDoesNotContainUnsupportedCharacter() {
+            var password = new Password("Blub@21#$%&*");
+            assertThat(password.containsNoUnsupportedCharacter()).isTrue();
+        }
+        @Test
+        void  passwordContainsUnsupportedCharacter() {
+            var password = new Password("bl!^ub&1~!");
+            assertThat(password.containsNoUnsupportedCharacter()).isFalse();
         }
     }
 
