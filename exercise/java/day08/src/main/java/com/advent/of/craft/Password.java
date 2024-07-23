@@ -1,7 +1,5 @@
 package com.advent.of.craft;
 
-import java.util.stream.Stream;
-
 public record Password(String input) {
     public boolean hasLengthOfEightOrMore() {
         return this.input.length() >= 8;
@@ -22,7 +20,11 @@ public record Password(String input) {
     public boolean containsAtLeastOneApprovedSpecialCharacter() {
         char[] allowedSpecials = { '.', '*', '#', '@', '$', '%', '&' };
 
-        return Stream.of(this.input.toCharArray())
-                .anyMatch(c -> Stream.of(allowedSpecials).anyMatch(c::equals));
+        for (char allowedSpecial : allowedSpecials) {
+            if (this.input.contains(String.valueOf(allowedSpecial))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
