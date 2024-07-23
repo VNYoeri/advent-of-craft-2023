@@ -40,7 +40,7 @@ public record Password(String input) {
     private boolean isAllowed(Character character) {
         return Stream.of(ALLOWED.values())
                 .map(ALLOWED::character)
-                .anyMatch(allowed -> allowed.equals(character));
+                .anyMatch(character::equals);
     }
 
     enum ALLOWED {
